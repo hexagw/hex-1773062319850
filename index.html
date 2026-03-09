@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="site_title">HEX Token</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <style>
+        /* Global Styles */
+        :root {
+            --bg-dark: #0a0a0c;
+            --bg-medium: #1a1a1e;
+            --text-light: #e0e0e0;
+            --text-medium: #a0a0a0;
+            --accent-color: #00e676; /* Neon Green */
+            --accent-color-dark: #00b35a;
+            --border-color: #333338;
+            --font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--accent-color-dark);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-light);
+        }
+
+        h1 { font-size: 3rem; }
+        h2 { font-size: 2.5rem; }
+        h3 { font-size: 2rem; }
+
+        p {
+            margin-bottom: 1rem;
+            color: var(--text-medium);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        section {
+            padding: 6rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        section:nth-of-type(even) {
+            background-color: var(--bg-medium);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--bg-dark);
+            padding: 0.8rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-color-dark);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            padding: 0.7rem 1.9rem;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-dark);
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--bg-dark);
+            padding: 1.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-light);
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: var(--text-light);
+            font-weight: 600;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            width: 0;
+            height: 2px;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .lang-switcher {
+            display: flex;
+            gap: 0.5rem;
+            margin-left: 1.5rem;
+        }
+
+        .lang-switcher button {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-medium);
+            padding: 0.4rem 0.8rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .lang-switcher button:hover {
+            border-color: var(--accent-color);
+            color: var(--accent-color);
+        }
+
+        .lang-switcher button.active {
+            background-color: var(--accent-color);
+            color: var(--bg-dark);
+            border-color: var(--accent-color);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--text-light);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 8rem 0;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #150f20 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at center, rgba(0, 230, 118, 0.1) 0%, transparent 70%);
+            animation: rotateBackground 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes rotateBackground {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero .logo-img {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.5rem;
+            border-radius: 50%;
+            border: 3px solid var(--accent-color);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+            animation: pulse 2s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); box-shadow: 0 0 10px rgba(0, 230, 118, 0.3); }
+            to { transform: scale(1.05); box-shadow: 0 0 25px rgba(0, 230, 118, 0.7); }
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, var(--accent-color), #00aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            margin-bottom: 2.5rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            font-size: 1.8rem;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .social-links svg {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        /* Section Common Styles */
+        .section-title {
+            text-align: center;
+            font-size: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(45deg, var(--accent-color), #00aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: -10px;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        /* About Section */
+        .about-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3rem;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+        }
+
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .about-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .about-image img:hover {
+            transform: scale(1.02);
+        }
+
+        /* Tokenomics Section */
+        .tokenomics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .tokenomic-card {
+            background-color: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tokenomic-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 230, 118, 0.15);
+        }
+
+        .tokenomic-card h3 {
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .tokenomic-card p {
+            font-size: 1.1rem;
+            color: var(--text-light);
+        }
+
+        .tokenomic-card span {
+            display: block;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+        }
+
+        /* Roadmap Section */
+        .roadmap-timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
+
+        .roadmap-timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 4px;
+            height: 100%;
+            background-color: var(--border-color);
+            transform: translateX(-50%);
+        }
+
+        .roadmap-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .roadmap-item:nth-child(odd) {
+            flex-direction: row-reverse;
+        }
+
+        .roadmap-item-content {
+            width: 45%;
+            background-color: var(--bg-medium);
+            border: 1px solid var(--border-color);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            position: relative;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .roadmap-item-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 230, 118, 0.1);
+        }
+
+        .roadmap-item-content h3 {
+            color: var(--accent-color);
+            margin-bottom: 0.8rem;
+            font-size: 1.5rem;
+        }
+
+        .roadmap-item-content p {
+            font-size: 1rem;
+            color: var(--text-medium);
+        }
+
+        .roadmap-item-date {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-dark);
+            font-weight: 700;
+            font-size: 0.9rem;
+            z-index: 1;
+        }
+
+        .roadmap-item:nth-child(even) .roadmap-item-date {
+            left: calc(50% - 25px);
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-item-date {
+            right: calc(50% - 25px);
+        }
+
+        .roadmap-item:nth-child(even) .roadmap-item-content::after {
+            content: '';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 30px;
+            height: 30px;
+            background-color: var(--bg-medium);
+            border-right: 1px solid var(--border-color);
+            border-top: 1px solid var(--border-color);
+            z-index: -1;
+        }
+
+        .roadmap-item:nth-child(odd) .roadmap-item-content::after {
+            content: '';
+            position: absolute;
+            left: -15px;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 30px;
+            height: 30px;
+            background-color: var(--bg-medium);
+            border-left: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            z-index: -1;
+        }
+
+        /* Community Section */
+        .community-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .community-content p {
+            font-size: 1.15rem;
+            margin-bottom: 2.5rem;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--bg-medium);
+            color: var(--text-medium);
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer .social-links {
+            margin-bottom: 1.5rem;
+        }
+
+        .footer p {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+            .section-title {
+                font-size: 2.5rem;
+            }
+            .roadmap-timeline::before {
+                left: 1.5rem; /* Adjust for mobile */
+                transform: translateX(0);
+            }
+            .roadmap-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .roadmap-item:nth-child(odd) {
+                flex-direction: column;
+            }
+            .roadmap-item-content {
+                width: calc(100% - 3rem); /* Adjust width */
+                margin-left: 3rem;
+            }
+            .roadmap-item-date {
+                left: 0;
+                top: 0;
+                transform: translateY(0);
+            }
+            .roadmap-item:nth-child(even) .roadmap-item-date,
+            .roadmap-item:nth-child(odd) .roadmap-item-date {
+                left: 0;
+                right: auto;
+            }
+            .roadmap-item-content::after {
+                display: none; /* Hide arrow on mobile */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                background-color: var(--bg-dark);
+                border-top: 1px solid var(--border-color);
+                padding: 1rem 0;
+                gap: 1rem;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .hamburger {
+                display: flex;
+            }
+            .navbar {
+                flex-wrap: wrap;
+            }
+            .lang-switcher {
+                margin-left: auto;
+                margin-right: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            .hero p {
+                font-size: 1.1rem;
+            }
+            .hero-actions {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .btn {
+                width: 80%;
+                max-width: 300px;
+            }
+            .section-title {
+                font-size: 2rem;
+            }
+            .about-content {
+                flex-direction: column;
+            }
+            .about-text, .about-image {
+                max-width: 100%;
+            }
+            .tokenomic-card h3 {
+                font-size: 1.5rem;
+            }
+            .tokenomic-card span {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 1rem;
+            }
+            h1 { font-size: 2.5rem; }
+            h2 { font-size: 2rem; }
+            h3 { font-size: 1.5rem; }
+            section {
+                padding: 4rem 0;
+            }
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .hero .logo-img {
+                width: 90px;
+                height: 90px;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .roadmap-item-content {
+                padding: 1rem;
+            }
+            .roadmap-item-date {
+                width: 40px;
+                height: 40px;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">HEX</a>
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#about" data-i18n="nav_about">About</a></li>
+                    <li><a href="#tokenomics" data-i18n="nav_tokenomics">Tokenomics</a></li>
+                    <li><a href="#roadmap" data-i18n="nav_roadmap">Roadmap</a></li>
+                    <li><a href="#community" data-i18n="nav_community">Community</a></li>
+                </ul>
+                <div class="lang-switcher">
+                    <button id="lang-en" class="active">EN</button>
+                    <button id="lang-zh">繁體中文</button>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section id="hero" class="hero">
+            <div class="container hero-content">
+                <img src="logo.png" alt="HEX Logo" class="logo-img">
+                <h1 data-i18n="hero_title">HEX Token</h1>
+                <p data-i18n="hero_description">HexaGen makes generating professional token websites with AI simple. Pay once, own forever.</p>
+                <div class="hero-actions">
+                    <a href="#" class="btn" data-i18n="hero_buy_button">Buy HEX</a>
+                    <a href="#" class="btn btn-outline" data-i18n="hero_chart_button">View Chart</a>
+                </div>
+                <div class="social-links">
+                    <a href="https://t.me/hexagw" target="_blank" aria-label="Telegram">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7-3.03 8.4-3.61 4-.1.83-.15 1.12-.15.06 0 .21.01.3.09.09.08.12.19.13.26.02.08.03.23.02.29z"/></svg>
+                    </a>
+                    <a href="https://twitter.com/hexagw" target="_blank" aria-label="Twitter">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <h2 class="section-title" data-i18n="about_title">About HEX</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p data-i18n="about_paragraph_1">
+                            HexaGen is revolutionizing the way token projects establish their online presence. Leveraging advanced AI, we provide a seamless and efficient solution for generating professional, custom-designed token websites. Our platform ensures that every project, regardless of its size or technical expertise, can launch a stunning and functional website with minimal effort.
+                        </p>
+                        <p data-i18n="about_paragraph_2">
+                            With a one-time payment model, HexaGen offers unparalleled value, granting projects permanent ownership of their digital storefront. This eliminates recurring subscription fees and empowers creators to focus on what truly matters: building and growing their community. HEX token is at the core of this ecosystem, facilitating transactions and unlocking premium features within the HexaGen platform.
+                        </p>
+                        <p data-i18n="about_paragraph_3">
+                            Our vision is to democratize web development for the Web3 space, making high-quality, secure, and responsive websites accessible to everyone. Join us in shaping the future of decentralized project presentation.
+                        </p>
+                    </div>
+                    <div class="about-image">
+                        <img src="https://via.placeholder.com/500x350/00e676/0a0a0c?text=AI+Website+Gen" alt="AI Website Generation">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tokenomics">
+            <div class="container">
+                <h2 class="section-title" data-i18n="tokenomics_title">Tokenomics</h2>
+                <div class="tokenomics-grid">
+                    <div class="tokenomic-card">
+                        <h3 data-i18n="tokenomics_total_supply">Total Supply</h3>
+                        <p data-i18n="tokenomics_total_supply_value"><span>1,000,000,000</span> HEX</p>
+                    </div>
+                    <div class="tokenomic-card">
+                        <h3 data-i18n="tokenomics_buy_tax">Buy Tax</h3>
+                        <p data-i18n="tokenomics_buy_tax_value"><span>0%</span></p>
+                    </div>
+                    <div class="tokenomic-card">
+                        <h3 data-i18n="tokenomics_sell_tax">Sell Tax</h3>
+                        <p data-i18n="tokenomics_sell_tax_value"><span>0%</span></p>
+                    </div>
+                    <div class="tokenomic-card">
+                        <h3 data-i18n="tokenomics_chain">Chain</h3>
+                        <p data-i18n="tokenomics_chain_value"><span>BSC</span> (Binance Smart Chain)</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="roadmap">
+            <div class="container">
+                <h2 class="section-title" data-i18n="roadmap_title">Roadmap</h2>
+                <div class="roadmap-timeline">
+                    <div class="roadmap-item">
+                        <div class="roadmap-item-date" data-i18n="roadmap_phase_1_short">Q1 2024</div>
+                        <div class="roadmap-item-content">
+                            <h3 data-i18n="roadmap_phase_1_title">Phase 1: Foundation & Launch</h3>
+                            <p data-i18n="roadmap_phase_1_description">
+                                Concept development and initial smart contract deployment. Website design and launch. Community building on Telegram and Twitter. Initial marketing campaigns.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-item-date" data-i18n="roadmap_phase_2_short">Q2 2024</div>
+                        <div class="roadmap-item-content">
+                            <h3 data-i18n="roadmap_phase_2_title">Phase 2: Platform Development</h3>
+                            <p data-i18n="roadmap_phase_2_description">
+                                Alpha release of the AI website generation platform. Integration of HEX token for premium features. Partnerships with Web3 service providers.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-item-date" data-i18n="roadmap_phase_3_short">Q3 2024</div>
+                        <div class="roadmap-item-content">
+                            <h3 data-i18n="roadmap_phase_3_title">Phase 3: Expansion & Ecosystem Growth</h3>
+                            <p data-i18n="roadmap_phase_3_description">
+                                Beta launch of the HexaGen platform to the public. Introduction of advanced AI features and design templates. Listing on major analytics platforms.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="roadmap-item">
+                        <div class="roadmap-item-date" data-i18n="roadmap_phase_4_short">Q4 2024</div>
+                        <div class="roadmap-item-content">
+                            <h3 data-i18n="roadmap_phase_4_title">Phase 4: Decentralization & Innovation</h3>
+                            <p data-i18n="roadmap_phase_4_description">
+                                Explore DAO governance for HexaGen platform. Implement new AI models for dynamic content generation. Expand to other blockchain networks.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="community">
+            <div class="container">
+                <h2 class="section-title" data-i18n="community_title">Join Our Community</h2>
+                <div class="community-content">
+                    <p data-i18n="community_description">
+                        Become a part of the HexaGen family! Connect with us on our social channels to stay updated on the latest news, announcements, and developments. Your feedback and participation are crucial to our success.
+                    </p>
+                    <div class="social-links">
+                        <a href="https://t.me/hexagw" target="_blank" aria-label="Telegram">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7-3.03 8.4-3.61 4-.1.83-.15 1.12-.15.06 0 .21.01.3.09.09.08.12.19.13.26.02.08.03.23.02.29z"/></svg>
+                        </a>
+                        <a href="https://twitter.com/hexagw" target="_blank" aria-label="Twitter">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="social-links">
+                <a href="https://t.me/hexagw" target="_blank" aria-label="Telegram">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.52-1.4.51-.46-.01-1.35-.26-2.01-.48-.81-.27-1.45-.42-1.39-.89.03-.25.38-.51 1.07-.78 4.2-1.82 7-3.03 8.4-3.61 4-.1.83-.15 1.12-.15.06 0 .21.01.3.09.09.08.12.19.13.26.02.08.03.23.02.29z"/></svg>
+                </a>
+                <a href="https://twitter.com/hexagw" target="_blank" aria-label="Twitter">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+            </div>
+            <p data-i18n="footer_copyright">&copy; 2024 HEX Token. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const translations = {
+            en: {
+                site_title: "HEX Token",
+                nav_about: "About",
+                nav_tokenomics: "Tokenomics",
+                nav_roadmap: "Roadmap",
+                nav_community: "Community",
+                hero_title: "HEX Token",
+                hero_description: "HexaGen makes generating professional token websites with AI simple. Pay once, own forever.",
+                hero_buy_button: "Buy HEX",
+                hero_chart_button: "View Chart",
+                about_title: "About HEX",
+                about_paragraph_1: "HexaGen is revolutionizing the way token projects establish their online presence. Leveraging advanced AI, we provide a seamless and efficient solution for generating professional, custom-designed token websites. Our platform ensures that every project, regardless of its size or technical expertise, can launch a stunning and functional website with minimal effort.",
+                about_paragraph_2: "With a one-time payment model, HexaGen offers unparalleled value, granting projects permanent ownership of their digital storefront. This eliminates recurring subscription fees and empowers creators to focus on what truly matters: building and growing their community. HEX token is at the core of this ecosystem, facilitating transactions and unlocking premium features within the HexaGen platform.",
+                about_paragraph_3: "Our vision is to democratize web development for the Web3 space, making high-quality, secure, and responsive websites accessible to everyone. Join us in shaping the future of decentralized project presentation.",
+                tokenomics_title: "Tokenomics",
+                tokenomics_total_supply: "Total Supply",
+                tokenomics_total_supply_value: "<span>1,000,000,000</span> HEX",
+                tokenomics_buy_tax: "Buy Tax",
+                tokenomics_buy_tax_value: "<span>0%</span>",
+                tokenomics_sell_tax: "Sell Tax",
+                tokenomics_sell_tax_value: "<span>0%</span>",
+                tokenomics_chain: "Chain",
+                tokenomics_chain_value: "<span>BSC</span> (Binance Smart Chain)",
+                roadmap_title: "Roadmap",
+                roadmap_phase_1_short: "Q1 2024",
+                roadmap_phase_1_title: "Phase 1: Foundation & Launch",
+                roadmap_phase_1_description: "Concept development and initial smart contract deployment. Website design and launch. Community building on Telegram and Twitter. Initial marketing campaigns.",
+                roadmap_phase_2_short: "Q2 2024",
+                roadmap_phase_2_title: "Phase 2: Platform Development",
+                roadmap_phase_2_description: "Alpha release of the AI website generation platform. Integration of HEX token for premium features. Partnerships with Web3 service providers.",
+                roadmap_phase_3_short: "Q3 2024",
+                roadmap_phase_3_title: "Phase 3: Expansion & Ecosystem Growth",
+                roadmap_phase_3_description: "Beta launch of the HexaGen platform to the public. Introduction of advanced AI features and design templates. Listing on major analytics platforms.",
+                roadmap_phase_4_short: "Q4 2024",
+                roadmap_phase_4_title: "Phase 4: Decentralization & Innovation",
+                roadmap_phase_4_description: "Explore DAO governance for HexaGen platform. Implement new AI models for dynamic content generation. Expand to other blockchain networks.",
+                community_title: "Join Our Community",
+                community_description: "Become a part of the HexaGen family! Connect with us on our social channels to stay updated on the latest news, announcements, and developments. Your feedback and participation are crucial to our success.",
+                footer_copyright: "&copy; 2024 HEX Token. All rights reserved."
+            },
+            zh: {
+                site_title: "HEX 代幣",
+                nav_about: "關於",
+                nav_tokenomics: "代幣經濟",
+                nav_roadmap: "路線圖",
+                nav_community: "社群",
+                hero_title: "HEX 代幣",
+                hero_description: "HexaGen 使用 AI 生成專業的代幣官網從未如此簡單。一次支付，永久擁有。",
+                hero_buy_button: "購買 HEX",
+                hero_chart_button: "查看圖表",
+                about_title: "關於 HEX",
+                about_paragraph_1: "HexaGen 正在徹底改變代幣項目建立線上形象的方式。我們利用先進的 AI，提供無縫且高效的解決方案，用於生成專業、客製化的代幣網站。我們的平台確保每個項目，無論其規模或技術專業知識如何，都能以最少的努力啟動一個令人驚嘆且功能齊全的網站。",
+                about_paragraph_2: "憑藉一次性支付模式，HexaGen 提供無與倫比的價值，授予項目永久擁有其數位店面的權利。這消除了重複的訂閱費用，並使創作者能夠專注於真正重要的事情：建立和發展他們的社群。HEX 代幣是這個生態系統的核心，促進交易並解鎖 HexaGen 平台內的優質功能。",
+                about_paragraph_3: "我們的願景是將 Web3 空間的網頁開發民主化，讓每個人都能使用高品質、安全且響應迅速的網站。加入我們，共同塑造去中心化項目展示的未來。",
+                tokenomics_title: "代幣經濟",
+                tokenomics_total_supply: "總供應量",
+                tokenomics_total_supply_value: "<span>1,000,000,000</span> HEX",
+                tokenomics_buy_tax: "買入稅",
+                tokenomics_buy_tax_value: "<span>0%</span>",
+                tokenomics_sell_tax: "賣出稅",
+                tokenomics_sell_tax_value: "<span>0%</span>",
+                tokenomics_chain: "鏈",
+                tokenomics_chain_value: "<span>BSC</span> (幣安智能鏈)",
+                roadmap_title: "路線圖",
+                roadmap_phase_1_short: "2024 Q1",
+                roadmap_phase_1_title: "階段 1：基礎與啟動",
+                roadmap_phase_1_description: "概念開發和初始智能合約部署。網站設計與上線。在 Telegram 和 Twitter 上建立社群。初步行銷活動。",
+                roadmap_phase_2_short: "2024 Q2",
+                roadmap_phase_2_title: "階段 2：平台開發",
+                roadmap_phase_2_description: "AI 網站生成平台的 Alpha 版本發布。整合 HEX 代幣以實現高級功能。與 Web3 服務提供商建立合作夥伴關係。",
+                roadmap_phase_3_short: "2024 Q3",
+                roadmap_phase_3_title: "階段 3：擴展與生態系統成長",
+                roadmap_phase_3_description: "HexaGen 平台向公眾發布 Beta 版本。引入先進的 AI 功能和設計模板。在主要分析平台上市。",
+                roadmap_phase_4_short: "2024 Q4",
+                roadmap_phase_4_title: "階段 4：去中心化與創新",
+                roadmap_phase_4_description: "探索 HexaGen 平台的 DAO 治理。實施新的 AI 模型以實現動態內容生成。擴展到其他區塊鏈網路。",
+                community_title: "加入我們的社群",
+                community_description: "成為 HexaGen 大家庭的一員！在我們的社交頻道上與我們聯繫，以獲取最新消息、公告和發展。您的回饋和參與對我們的成功至關重要。",
+                footer_copyright: "&copy; 2024 HEX 代幣。保留所有權利。"
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            document.documentElement.lang = lang;
+            localStorage.setItem('lang', lang);
+
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (translations[lang] && translations[lang][key]) {
+                    // Use innerHTML for content that might contain HTML tags (like <span>) or entities
+                    if (key.includes('_value') || key === 'footer_copyright') {
+                        element.innerHTML = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            // Update active button state
+            document.querySelectorAll('.lang-switcher button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.getElementById(`lang-${lang}`).classList.add('active');
+        }
+
+        // Initialize language on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
+
+            // Language switcher event listeners
+            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
+            document.getElementById('lang-zh').addEventListener('click', () => setLanguage('zh'));
+
+            // Hamburger menu functionality
+            const hamburger = document.getElementById('hamburger');
+            const navLinks = document.getElementById('navLinks');
+
+            hamburger.addEventListener('click', () => {
+                navLinks.classList.toggle('active');
+            });
+
+            // Close nav menu when a link is clicked (for mobile)
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (navLinks.classList.contains('active')) {
+                        navLinks.classList.remove('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
